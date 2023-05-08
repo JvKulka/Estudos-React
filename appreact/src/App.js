@@ -1,7 +1,5 @@
 import React from "react";
-import Produto from "./Produto";
-import { GlobalStorage } from "./GlobalContext";
-import Limpar from "./Limpar";
+import useLocalStorage from "./useLocalStorage";
 
 // 1 EXERCICIO
 
@@ -226,12 +224,32 @@ import Limpar from "./Limpar";
 // defina uma função chamada limparDados que é responsável por zerar os dados de produto
 // e exponha essa função no contexto global
 
+// const App = () => {
+//   return (
+//     <GlobalStorage>
+//       <Produto />
+//       <Limpar />
+//     </GlobalStorage>
+//   );
+// };
+
+//------------------------------------------------------------------------//
+
+// Criação de Custom Hooks (useLocalStorage)
+
 const App = () => {
+  const [produto, setProduto] = useLocalStorage("produto", "");
+
+  function handleClick({ target }) {
+    setProduto(target.innerText);
+  }
+
   return (
-    <GlobalStorage>
-      <Produto />
-      <Limpar />
-    </GlobalStorage>
+    <div>
+      <p>Preferido: {produto}</p>
+      <button onClick={handleClick}>notebook</button>
+      <button onClick={handleClick}>smartphone</button>
+    </div>
   );
 };
 
