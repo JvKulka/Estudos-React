@@ -1,20 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
+import { GlobalContext } from "./GlobalContext";
 
-const Produto = ({ produto }) => {
-  const [dados, setDados] = useState(null);
-
-  React.useEffect(() => {
-    if (produto !== null)
-      fetch(`https://ranekapi.origamid.dev/json/api/produto/${produto}`)
-        .then((response) => response.json())
-        .then((json) => setDados(json));
-  }, [produto]);
-
-  if (dados === null) return null;
+const Produto = () => {
+  const global = React.useContext(GlobalContext);
+  if (global.dados === null) return null;
   return (
     <div>
-      <h1>{dados.nome}</h1>
-      <p>R$ {dados.preco}</p>
+      Produto:{" "}
+      {global.dados.map((produto) => (
+        <li key={produto.id}>{produto.nome}</li>
+      ))}
     </div>
   );
 };

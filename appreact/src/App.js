@@ -1,5 +1,7 @@
 import React from "react";
 import Produto from "./Produto";
+import { GlobalStorage } from "./GlobalContext";
+import Limpar from "./Limpar";
 
 // 1 EXERCICIO
 
@@ -185,31 +187,51 @@ import Produto from "./Produto";
 // Defina o produto clicado como uma preferência do usuário no localStorage
 // Quando o usuário entrar no site, se existe um produto no localStorage, faça o fetch do mesmo
 
+// const App = () => {
+//   const [produto, setProduto] = React.useState(null);
+
+//   React.useEffect(() => {
+//     const produtoLocal = window.localStorage.getItem("produto");
+//     if (produtoLocal !== null) setProduto(produtoLocal);
+//   }, []);
+
+//   React.useEffect(() => {
+//     if (produto !== null) window.localStorage.setItem("produto", produto);
+//   }, [produto]);
+
+//   function handleClick({ target }) {
+//     setProduto(target.innerText);
+//   }
+
+//   return (
+//     <div>
+//       <h1> Preferência: {produto}</h1>
+//       <button onClick={handleClick} style={{ marginRight: "1rem" }}>
+//         Notebook
+//       </button>
+//       <button onClick={handleClick}>Smartphone</button>
+//       <Produto produto={produto} />
+//     </div>
+//   );
+// };
+
+//------------------------------------------------------------------------//
+
+// 6 EXERCICIO
+
+// Utilize o GlobalContext do exemplo anterior para puxar os dados da API abaixo:
+// https://ranekapi.origamid.dev/json/api/produto/
+// assim que o usuário acessar o app
+// coloque os dados da API no contexto global, dando acesso aos dados da mesma
+// defina uma função chamada limparDados que é responsável por zerar os dados de produto
+// e exponha essa função no contexto global
+
 const App = () => {
-  const [produto, setProduto] = React.useState(null);
-
-  React.useEffect(() => {
-    const produtoLocal = window.localStorage.getItem("produto");
-    if (produtoLocal !== null) setProduto(produtoLocal);
-  }, []);
-
-  React.useEffect(() => {
-    if (produto !== null) window.localStorage.setItem("produto", produto);
-  }, [produto]);
-
-  function handleClick({ target }) {
-    setProduto(target.innerText);
-  }
-
   return (
-    <div>
-      <h1> Preferência: {produto}</h1>
-      <button onClick={handleClick} style={{ marginRight: "1rem" }}>
-        Notebook
-      </button>
-      <button onClick={handleClick}>Smartphone</button>
-      <Produto produto={produto} />
-    </div>
+    <GlobalStorage>
+      <Produto />
+      <Limpar />
+    </GlobalStorage>
   );
 };
 
