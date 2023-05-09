@@ -1,6 +1,6 @@
 import React from "react";
-import useLocalStorage from "./useLocalStorage";
-import useFetch from "./useFetch";
+// import useLocalStorage from "./useLocalStorage";
+// import useFetch from "./useFetch";
 
 // 1 EXERCICIO
 
@@ -238,43 +238,145 @@ import useFetch from "./useFetch";
 
 // Criação de Custom Hooks (useLocalStorage)
 
+// const App = () => {
+//   const [produto, setProduto] = useLocalStorage("produto", "");
+//   const { request, data, loading, error } = useFetch();
+
+//   React.useEffect(() => {
+//     async function fetchData() {
+//       const { response, json } = await request(
+//         "https://ranekapi.origamid.dev/json/api/produto/"
+//       );
+//       console.log(response, json);
+//     }
+//     fetchData();
+//   }, [request]);
+
+//   function handleClick({ target }) {
+//     setProduto(target.innerText);
+//   }
+
+//   if (error) return <p>{error}</p>;
+//   if (loading) return <p>Carregando...</p>;
+//   if (data)
+//     return (
+//       <div>
+//         <p>Preferido: {produto}</p>
+//         <button onClick={handleClick} style={{ margin: "1rem" }}>
+//           notebook
+//         </button>
+//         <button onClick={handleClick}>smartphone</button>
+
+//         {data.map((produto) => (
+//           <div key={produto.id}>
+//             <h1>{produto.nome}</h1>
+//           </div>
+//         ))}
+//       </div>
+//     );
+//   else return null;
+// };
+
+//------------------------------------------------------------------------//
+
+// 7 EXERCICIO
+
+// Faça um fetch (POST) para a API abaixo
+// Para a criação ser aceita é necessário enviar dodos de:
+// nome, email, senha, cep, rua, numero, bairro, cidade e estado
+// Mostre uma mensagem na tela, caso a resposta da API seja positiva
+
+const formFields = [
+  {
+    id: "nome",
+    label: "Nome",
+    type: "text",
+  },
+  {
+    id: "email",
+    label: "Email",
+    type: "email",
+  },
+  {
+    id: "senha",
+    label: "Senha",
+    type: "password",
+  },
+  {
+    id: "cep",
+    label: "Cep",
+    type: "text",
+  },
+  {
+    id: "rua",
+    label: "Rua",
+    type: "text",
+  },
+  {
+    id: "numero",
+    label: "Numero",
+    type: "text",
+  },
+  {
+    id: "bairro",
+    label: "Bairro",
+    type: "text",
+  },
+  {
+    id: "cidade",
+    label: "Cidade",
+    type: "text",
+  },
+  {
+    id: "estado",
+    label: "Estado",
+    type: "text",
+  },
+];
+
+/* Automatiza o formFields */
 const App = () => {
-  const [produto, setProduto] = useLocalStorage("produto", "");
-  const { request, data, loading, error } = useFetch();
+  const [form, setForm] = React.useState(
+    formFields.reduce((acc, field) => {
+      return {
+        ...acc,
+        [field.id]: "",
+      };
+    }, {})
+  );
 
-  React.useEffect(() => {
-    async function fetchData() {
-      const { response, json } = await request(
-        "https://ranekapi.origamid.dev/json/api/produto/"
-      );
-      console.log(response, json);
-    }
-    fetchData();
-  }, [request]);
+  const [response, setResponse] = React.useState(null);
 
-  function handleClick({ target }) {
-    setProduto(target.innerText);
+  function handleChange({ target }) {
+    const { id, value } = target;
+    setForm({ ...form, [id]: value });
   }
 
-  if (error) return <p>{error}</p>;
-  if (loading) return <p>Carregando...</p>;
-  if (data)
-    return (
-      <div>
-        <p>Preferido: {produto}</p>
-        <button onClick={handleClick} style={{ margin: "1rem" }}>
-          notebook
-        </button>
-        <button onClick={handleClick}>smartphone</button>
+  function handleSubmit(event) {
+    event.preventDefault();
+    fetch("https://ranekapi.origamid.dev/json/api/usuario", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    }).then((response) => {
+      setResponse(response);
+    });
+  }
 
-        {data.map((produto) => (
-          <div key={produto.id}>
-            <h1>{produto.nome}</h1>
-          </div>
-        ))}
-      </div>
-    );
-  else return null;
+  return (
+    <form onSubmit={handleSubmit}>
+      {formFields.map(({ id, label, type }) => (
+        <div key={id}>
+          <label htmlFor={id}>{label}</label>
+          <input type={type} id={id} value={form[id]} onChange={handleChange} />
+        </div>
+      ))}
+      <button>Enviar</button>
+      {response && response.ok && <p>Formulário Enviado</p>}
+    </form>
+  );
 };
 
 export default App;
