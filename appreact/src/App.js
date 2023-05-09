@@ -1,4 +1,7 @@
 import React from "react";
+import Input from "./input";
+import useForm from "./useForm";
+
 // import useLocalStorage from "./useLocalStorage";
 // import useFetch from "./useFetch";
 
@@ -286,95 +289,123 @@ import React from "react";
 // nome, email, senha, cep, rua, numero, bairro, cidade e estado
 // Mostre uma mensagem na tela, caso a resposta da API seja positiva
 
-const formFields = [
-  {
-    id: "nome",
-    label: "Nome",
-    type: "text",
-  },
-  {
-    id: "email",
-    label: "Email",
-    type: "email",
-  },
-  {
-    id: "senha",
-    label: "Senha",
-    type: "password",
-  },
-  {
-    id: "cep",
-    label: "Cep",
-    type: "text",
-  },
-  {
-    id: "rua",
-    label: "Rua",
-    type: "text",
-  },
-  {
-    id: "numero",
-    label: "Numero",
-    type: "text",
-  },
-  {
-    id: "bairro",
-    label: "Bairro",
-    type: "text",
-  },
-  {
-    id: "cidade",
-    label: "Cidade",
-    type: "text",
-  },
-  {
-    id: "estado",
-    label: "Estado",
-    type: "text",
-  },
-];
+// const formFields = [
+//   {
+//     id: "nome",
+//     label: "Nome",
+//     type: "text",
+//   },
+//   {
+//     id: "email",
+//     label: "Email",
+//     type: "email",
+//   },
+//   {
+//     id: "senha",
+//     label: "Senha",
+//     type: "password",
+//   },
+//   {
+//     id: "cep",
+//     label: "Cep",
+//     type: "text",
+//   },
+//   {
+//     id: "rua",
+//     label: "Rua",
+//     type: "text",
+//   },
+//   {
+//     id: "numero",
+//     label: "Numero",
+//     type: "text",
+//   },
+//   {
+//     id: "bairro",
+//     label: "Bairro",
+//     type: "text",
+//   },
+//   {
+//     id: "cidade",
+//     label: "Cidade",
+//     type: "text",
+//   },
+//   {
+//     id: "estado",
+//     label: "Estado",
+//     type: "text",
+//   },
+// ];
 
-/* Automatiza o formFields */
+// /* Automatiza o formFields */
+// const App = () => {
+//   const [form, setForm] = React.useState(
+//     formFields.reduce((acc, field) => {
+//       return {
+//         ...acc,
+//         [field.id]: "",
+//       };
+//     }, {})
+//   );
+
+//   const [response, setResponse] = React.useState(null);
+
+//   function handleChange({ target }) {
+//     const { id, value } = target;
+//     setForm({ ...form, [id]: value });
+//   }
+
+//   function handleSubmit(event) {
+//     event.preventDefault();
+//     fetch("https://ranekapi.origamid.dev/json/api/usuario", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(form),
+//     }).then((response) => {
+//       setResponse(response);
+//     });
+//   }
+
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       {formFields.map(({ id, label, type }) => (
+//         <div key={id}>
+//           <label htmlFor={id}>{label}</label>
+//           <input type={type} id={id} value={form[id]} onChange={handleChange} />
+//         </div>
+//       ))}
+//       <button>Enviar</button>
+//       {response && response.ok && <p>Formulário Enviado</p>}
+//     </form>
+//   );
+// };
+
+//------------------------------------------------------------------------//
+
 const App = () => {
-  const [form, setForm] = React.useState(
-    formFields.reduce((acc, field) => {
-      return {
-        ...acc,
-        [field.id]: "",
-      };
-    }, {})
-  );
-
-  const [response, setResponse] = React.useState(null);
-
-  function handleChange({ target }) {
-    const { id, value } = target;
-    setForm({ ...form, [id]: value });
-  }
+  const cep = useForm("cep");
 
   function handleSubmit(event) {
     event.preventDefault();
-    fetch("https://ranekapi.origamid.dev/json/api/usuario", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    }).then((response) => {
-      setResponse(response);
-    });
+    if (cep.validate()) {
+      console.log("Enviar");
+    } else {
+      console.log("Não enviar");
+    }
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      {formFields.map(({ id, label, type }) => (
-        <div key={id}>
-          <label htmlFor={id}>{label}</label>
-          <input type={type} id={id} value={form[id]} onChange={handleChange} />
-        </div>
-      ))}
+      <Input
+        label="CEP"
+        id="cep"
+        type="text"
+        placeholder="00000-000"
+        {...cep}
+      />
       <button>Enviar</button>
-      {response && response.ok && <p>Formulário Enviado</p>}
     </form>
   );
 };
